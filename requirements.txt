@@ -4,4 +4,8 @@ openai
 python-dotenv
 google-generativeai
 reportlab
+textblob
+spacy
+transformer
+requests
 
