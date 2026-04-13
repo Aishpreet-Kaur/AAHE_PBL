@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from pdf_exporter import generate_pdf_with_sources
+from pdf_exporter import generate_pdf
 from ai_engine import generate_hypotheses_with_evidence
 from db_manager import (
     init_db, 

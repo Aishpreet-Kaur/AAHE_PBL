@@ -1,4 +1,4 @@
-# from db_manager import (
+from db_manager import (
     get_last_fetch_time,
     update_confidence,
     get_hypothesis_by_id
@@ -17,6 +17,9 @@ ROOT = os.path.dirname(os.path.dirname(__file__))
 load_dotenv(os.path.join(ROOT, ".env"))
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
+# ============================================================================
+# WEB SEARCH INTEGRATION
+# ============================================================================
 
 
 def search_web_sources(topic: str, max_results: int = 5) -> Tuple[List[Dict], str]:
@@ -217,7 +220,75 @@ def _search_with_newsapi(topic: str, api_key: str, max_results: int) -> Tuple[Li
         return [], f"⚠️ NewsAPI error: {str(e)}"
 
 
+# def _calculate_credibility(url: str) -> float:
+#     """
+#     Calculate a credibility score for a source based on domain authority.
 
+#     Returns score from 0-10
+#     """
+
+#     # High credibility domains
+#     high_credibility = [
+#         'gov', 'edu', 'reuters.com', 'apnews.com', 'bbc.com',
+#         'nature.com', 'science.org', 'nejm.org', 'thelancet.com',
+#         'who.int', 'un.org', 'worldbank.org', 'imf.org'
+#     ]
+
+#     # Medium credibility
+#     medium_credibility = [
+#         'nytimes.com', 'washingtonpost.com', 'theguardian.com',
+#         'wsj.com', 'ft.com', 'economist.com', 'bloomberg.com',
+#         'forbes.com', 'cnbc.com', 'npr.org'
+#     ]
+
+#     # Check domain
+#     url_lower = url.lower()
+
+#     for domain in high_credibility:
+#         if domain in url_lower:
+#             return 9.0
+
+#     for domain in medium_credibility:
+#         if domain in url_lower:
+#             return 7.5
+
+#     # Check for academic or government domains
+#     if '.edu' in url_lower or '.gov' in url_lower:
+#         return 8.5
+
+#     # Default credibility for other sources
+#     return 6.0
+
+# def _calculate_credibility(url: str, title: str = "", snippet: str = "") -> float:
+#     """
+#     Calculate credibility using ML content analysis.
+#     Falls back to domain-based if content not available.
+#     """
+
+#     # If we have content, use ML analysis
+#     if snippet and len(snippet) > 50:
+#         try:
+#             from content_analyzer import analyze_content_credibility
+#             result = analyze_content_credibility(snippet, title)
+#             return result['content_score']
+#         except Exception as e:
+#             print(f"ML analysis failed, using domain-based: {e}")
+#             # Fall through to domain-based
+
+#     # Domain-based fallback (your existing logic)
+#     url_lower = url.lower()
+
+#     high_credibility = ['gov', 'edu', 'reuters.com', 'apnews.com', 'bbc.com']
+#     for domain in high_credibility:
+#         if domain in url_lower:
+#             return 9.0
+
+#     medium_credibility = ['nytimes.com', 'washingtonpost.com', 'wsj.com']
+#     for domain in medium_credibility:
+#         if domain in url_lower:
+#             return 7.5
+
+#     return 6.0
 def _calculate_credibility(url: str, title: str = "", snippet: str = "") -> dict:
     """
     ML-based credibility analysis using content features.
@@ -405,6 +476,10 @@ def generate_hypotheses(topic: str, custom_query: str = None) -> str:
 
     return "\n".join(text_parts)
 
+
+# ============================================================================
+# TEMPORAL UPDATE ENGINE (Enhanced with web evidence)
+# ============================================================================
 
 
 def temporal_update_engine(hypothesis_id: int):
