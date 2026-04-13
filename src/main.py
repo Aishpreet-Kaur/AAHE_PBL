@@ -138,7 +138,5 @@ def run_realtime_engine():
 
     print("Updated confidence:", new_conf)
 
-
-
 if __name__ == "__main__":
     run_realtime_engine()

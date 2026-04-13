@@ -30,6 +30,17 @@ If any user query or request is supplied, treat it as high priority: {custom_que
 #     model = genai.GenerativeModel("gemini-2.5-flash")
 #     response = model.generate_content(prompt)
 #     return response.text 
+# Add web search BEFORE generating hypothesis
+
+def generate_hypotheses_with_evidence(topic: str, custom_query: str = None):
+    # 1. Search web for evidence
+    evidence = search_web_sources(topic)
+    
+    # 2. Enhance prompt with real sources
+    enhanced_prompt = DETECTIVE_PROMPT + f"\n\nVerified Sources:\n{evidence}"
+    
+    # 3. Generate with citations
+    return generate_with_citations(enhanced_prompt)
 
 def generate_hypotheses(topic: str, custom_query: str = None) -> str:
     prompt = DETECTIVE_PROMPT.format(
