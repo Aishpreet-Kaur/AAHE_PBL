@@ -181,7 +181,8 @@ with st.sidebar:
     # Configuration
     st.markdown("### 📋 Investigation Setup")
     topic = st.text_area("Case Topic / Search Query", placeholder="Enter the topic you want to investigate...", height=100)
-    domain = st.selectbox("Domain", ["Business", "Finance", "Geopolitics", "Policy", "Technology", "Health", "Science", "Multi-Domain"])
+    domain = st.selectbox("Domain", ["Business", "Finance", "Geopolitics", "Policy", "Technology", "Health", "Science", "Multi-Domain"])    
+    custom_query = st.text_area("Custom Investigation Query (optional)", placeholder="Specific questions or angles to explore...", height=80)
     
     st.markdown("### ⚙️ Analysis Parameters")
     max_sources = st.slider("Maximum Web Sources", 3, 10, value=5, 
